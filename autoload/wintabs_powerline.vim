@@ -1,9 +1,13 @@
 function! wintabs_powerline#init()
-  let g:wintabs_renderers = wintabs#renderers#defaults()
-  let g:wintabs_renderers.buffer = function('wintabs_powerline#buffer')
-  let g:wintabs_renderers.buffer_sep = function('wintabs_powerline#buffer_sep')
-  let g:wintabs_renderers.tab = function('wintabs_powerline#tab')
-  let g:wintabs_renderers.tab_sep = function('wintabs_powerline#tab_sep')
+  let g:wintabs_renderers = {
+        \'buffer': function('wintabs_powerline#buffer'),
+        \'buffer_sep': function('wintabs_powerline#buffer_sep'),
+        \'tab': function('wintabs_powerline#tab'),
+        \'tab_sep': function('wintabs_powerline#tab_sep'),
+        \'left_arrow': function('wintabs_powerline#left_arrow'),
+        \'right_arrow': function('wintabs_powerline#right_arrow'),
+        \'line_sep': function('wintabs_powerline#line_sep'),
+        \}
 
   augroup colortuner_colorscheme
     autocmd!
@@ -55,7 +59,7 @@ function! wintabs_powerline#on_colorscheme()
 endfunction
 
 function! wintabs_powerline#buffer(bufnr, config)
-  let label = wintabs#renderers#buffer(a:bufnr, a:config).label
+  let label = wintabs#renderers#buf_label(a:bufnr)
   let highlight = a:config.is_active
         \? g:wintabs_powerline_higroup_active_buffer
         \: g:wintabs_powerline_higroup_buffer
@@ -87,7 +91,7 @@ function! wintabs_powerline#buffer_sep(config)
 endfunction
 
 function! wintabs_powerline#tab(tabnr, config)
-  let label = wintabs#renderers#tab(a:tabnr, a:config).label.' '
+  let label = ' '.wintabs#renderers#tab_label(a:tabnr).' '
   let highlight = a:config.is_active
         \? g:wintabs_powerline_higroup_active_tab
         \: g:wintabs_powerline_higroup_tab
@@ -116,6 +120,26 @@ function! wintabs_powerline#tab_sep(config)
   endif
 
   return { 'label': label, 'highlight': highlight }
+endfunction
+
+function! wintabs_powerline#left_arrow()
+  return {
+        \'type': 'left_arrow',
+        \'label': g:wintabs_powerline_arrow_left,
+        \'highlight': g:wintabs_powerline_higroup_arrow
+        \}
+endfunction
+
+function! wintabs_powerline#right_arrow()
+  return {
+        \'type': 'right_arrow',
+        \'label': g:wintabs_powerline_arrow_right,
+        \'highlight': g:wintabs_powerline_higroup_arrow
+        \}
+endfunction
+
+function! wintabs_powerline#line_sep()
+  return { 'type': 'sep', 'label': '  ', 'highlight': '' }
 endfunction
 
 function! s:highlight(higroup, fg_higroup, bg_higroup)
