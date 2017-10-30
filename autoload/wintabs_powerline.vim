@@ -9,7 +9,7 @@ function! wintabs_powerline#init()
         \'line_sep': function('wintabs_powerline#line_sep'),
         \}
 
-  augroup colortuner_colorscheme
+  augroup wintabs_powerline_on_colorscheme
     autocmd!
     autocmd ColorScheme,VimEnter * call wintabs_powerline#on_colorscheme()
   augroup END
