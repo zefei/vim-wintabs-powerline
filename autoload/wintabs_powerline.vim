@@ -16,11 +16,27 @@ function! wintabs_powerline#init()
 endfunction
 
 function! wintabs_powerline#on_colorscheme()
-  call s:highlight(
-        \g:wintabs_display == 'tabline' ? 'TabLineFill' : 'StatusLine',
-        \g:wintabs_powerline_higroup_empty,
-        \g:wintabs_powerline_higroup_empty,
-        \)
+  " set default tabline/statusline highlight to empty
+  if g:wintabs_display == 'tabline'
+    call s:highlight(
+          \'TabLineFill',
+          \g:wintabs_powerline_higroup_empty,
+          \g:wintabs_powerline_higroup_empty,
+          \)
+  else
+    call s:highlight(
+          \'StatusLine',
+          \g:wintabs_powerline_higroup_empty,
+          \g:wintabs_powerline_higroup_empty,
+          \)
+    call s:highlight(
+          \'StatusLineNC',
+          \g:wintabs_powerline_higroup_empty,
+          \g:wintabs_powerline_higroup_empty,
+          \)
+  endif
+
+  " create highlights for transitional separators
   call s:highlight(
         \'WintabsPowerlineBufferSepActiveBuffer',
         \g:wintabs_powerline_higroup_buffer,
