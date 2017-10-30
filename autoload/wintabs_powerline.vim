@@ -16,6 +16,16 @@ function! wintabs_powerline#init()
 endfunction
 
 function! wintabs_powerline#on_colorscheme()
+  " link default tabline/statusline highlight to empty
+  if g:wintabs_display == 'tabline'
+    execute 'highlight! link TabLineFill '.g:wintabs_powerline_higroup_empty
+    highlight! link StatusLine NONE
+  else
+    execute 'highlight! link StatusLine '.g:wintabs_powerline_higroup_empty
+    highlight! link TabLineFill NONE
+  endif
+
+  " create highlights for transitional separators
   call s:highlight(
         \'WintabsPowerlineBufferSepActiveBuffer',
         \g:wintabs_powerline_higroup_buffer,
