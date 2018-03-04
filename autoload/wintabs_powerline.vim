@@ -18,22 +18,10 @@ endfunction
 function! wintabs_powerline#on_colorscheme()
   " set default tabline/statusline highlight to empty
   if g:wintabs_display == 'tabline'
-    call s:highlight(
-          \'TabLineFill',
-          \g:wintabs_powerline_higroup_empty,
-          \g:wintabs_powerline_higroup_empty,
-          \)
+    call s:highlight_bg('TabLineFill', g:wintabs_powerline_higroup_empty)
   else
-    call s:highlight(
-          \'StatusLine',
-          \g:wintabs_powerline_higroup_empty,
-          \g:wintabs_powerline_higroup_empty,
-          \)
-    call s:highlight(
-          \'StatusLineNC',
-          \g:wintabs_powerline_higroup_empty,
-          \g:wintabs_powerline_higroup_empty,
-          \)
+    call s:highlight_bg('StatusLine', g:wintabs_powerline_higroup_empty)
+    call s:highlight_bg('StatusLineNC', g:wintabs_powerline_higroup_empty)
   endif
 
   " create highlights for transitional separators
@@ -169,6 +157,15 @@ function! s:highlight(higroup, fg_higroup, bg_higroup)
   let cmd = 'highlight! '.a:higroup
   for mode in ['gui', 'cterm']
     let cmd = cmd.' '.mode.'fg='.fg_color[mode]
+    let cmd = cmd.' '.mode.'bg='.bg_color[mode]
+  endfor
+  execute cmd
+endfunction
+
+function! s:highlight_bg(higroup, bg_higroup)
+  let bg_color = s:get_bg(a:bg_higroup)
+  let cmd = 'highlight! '.a:higroup
+  for mode in ['gui', 'cterm']
     let cmd = cmd.' '.mode.'bg='.bg_color[mode]
   endfor
   execute cmd
