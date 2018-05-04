@@ -7,6 +7,7 @@ function! wintabs_powerline#init()
         \'left_arrow': function('wintabs_powerline#left_arrow'),
         \'right_arrow': function('wintabs_powerline#right_arrow'),
         \'line_sep': function('wintabs_powerline#line_sep'),
+        \'padding': function('wintabs_powerline#padding'),
         \}
 
   augroup wintabs_powerline_on_colorscheme
@@ -16,14 +17,6 @@ function! wintabs_powerline#init()
 endfunction
 
 function! wintabs_powerline#on_colorscheme()
-  " set default tabline/statusline highlight to empty
-  if g:wintabs_display == 'tabline'
-    call s:highlight_bg('TabLineFill', g:wintabs_powerline_higroup_empty)
-  else
-    call s:highlight_bg('StatusLine', g:wintabs_powerline_higroup_empty)
-    call s:highlight_bg('StatusLineNC', g:wintabs_powerline_higroup_empty)
-  endif
-
   " create highlights for transitional separators
   call s:highlight(
         \'WintabsPowerlineBufferSepActiveBuffer',
@@ -149,6 +142,14 @@ endfunction
 
 function! wintabs_powerline#line_sep()
   return { 'type': 'sep', 'label': '  ', 'highlight': '' }
+endfunction
+
+function! wintabs_powerline#padding(len)
+  return {
+        \'type': 'text',
+        \'label': repeat(' ', a:len),
+        \'highlight': g:wintabs_powerline_higroup_empty,
+        \}
 endfunction
 
 function! s:highlight(higroup, fg_higroup, bg_higroup)
