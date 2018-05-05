@@ -128,7 +128,7 @@ function! wintabs_powerline#left_arrow()
   return {
         \'type': 'left_arrow',
         \'label': g:wintabs_powerline_arrow_left,
-        \'highlight': g:wintabs_powerline_higroup_arrow
+        \'highlight': g:wintabs_powerline_higroup_arrow,
         \}
 endfunction
 
@@ -136,17 +136,21 @@ function! wintabs_powerline#right_arrow()
   return {
         \'type': 'right_arrow',
         \'label': g:wintabs_powerline_arrow_right,
-        \'highlight': g:wintabs_powerline_higroup_arrow
+        \'highlight': g:wintabs_powerline_higroup_arrow,
         \}
 endfunction
 
 function! wintabs_powerline#line_sep()
-  return { 'type': 'sep', 'label': '  ', 'highlight': '' }
+  return {
+        \'type': 'sep',
+        \'label': '  ',
+        \'highlight': g:wintabs_powerline_higroup_empty,
+        \}
 endfunction
 
 function! wintabs_powerline#padding(len)
   return {
-        \'type': 'text',
+        \'type': 'sep',
         \'label': repeat(' ', a:len),
         \'highlight': g:wintabs_powerline_higroup_empty,
         \}
@@ -158,15 +162,6 @@ function! s:highlight(higroup, fg_higroup, bg_higroup)
   let cmd = 'highlight! '.a:higroup
   for mode in ['gui', 'cterm']
     let cmd = cmd.' '.mode.'fg='.fg_color[mode]
-    let cmd = cmd.' '.mode.'bg='.bg_color[mode]
-  endfor
-  execute cmd
-endfunction
-
-function! s:highlight_bg(higroup, bg_higroup)
-  let bg_color = s:get_bg(a:bg_higroup)
-  let cmd = 'highlight! '.a:higroup
-  for mode in ['gui', 'cterm']
     let cmd = cmd.' '.mode.'bg='.bg_color[mode]
   endfor
   execute cmd
