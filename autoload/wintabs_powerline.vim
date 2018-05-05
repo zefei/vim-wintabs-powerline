@@ -17,7 +17,7 @@ function! wintabs_powerline#init()
 endfunction
 
 function! wintabs_powerline#on_colorscheme()
-  " create highlights for transitional separators
+  let s:sep_is_transitional = {}
   call s:highlight(
         \'WintabsPowerlineBufferSepActiveBuffer',
         \g:wintabs_powerline_higroup_buffer,
@@ -69,26 +69,27 @@ function! wintabs_powerline#buffer(bufnr, config)
 endfunction
 
 function! wintabs_powerline#buffer_sep(config)
-  let label = g:wintabs_powerline_sep_buffer
-  let highlight = g:wintabs_powerline_higroup_buffer
-
   if a:config.is_leftmost
-    let label = ''
-    let highlight = ''
-  elseif a:config.is_active || a:config.is_rightmost
-    let label = g:wintabs_powerline_sep_buffer_transition
-
-    if a:config.is_active && a:config.is_left
-      let highlight = 'WintabsPowerlineBufferSepActiveBuffer'
-    elseif a:config.is_active && a:config.is_right && !a:config.is_rightmost
-      let highlight = 'WintabsPowerlineActiveBufferSepBuffer'
-    elseif a:config.is_active && a:config.is_rightmost
-      let highlight = 'WintabsPowerlineActiveBufferSepEmpty'
-    elseif !a:config.is_active && a:config.is_rightmost
-      let highlight = 'WintabsPowerlineBufferSepEmpty'
-    endif
+    return { 'label': '', 'highlight': '' }
   endif
 
+  let highlight = g:wintabs_powerline_higroup_buffer
+  if a:config.is_active && a:config.is_left
+    let highlight = 'WintabsPowerlineBufferSepActiveBuffer'
+  elseif a:config.is_active && a:config.is_right && !a:config.is_rightmost
+    let highlight = 'WintabsPowerlineActiveBufferSepBuffer'
+  elseif a:config.is_active && a:config.is_rightmost
+    let highlight = 'WintabsPowerlineActiveBufferSepEmpty'
+  elseif !a:config.is_active && a:config.is_rightmost
+    let highlight = 'WintabsPowerlineBufferSepEmpty'
+  endif
+
+  let is_transitional = has_key(s:sep_is_transitional, highlight)
+        \? s:sep_is_transitional[highlight]
+        \: 0
+  let label = is_transitional
+        \? g:wintabs_powerline_sep_buffer_transition
+        \: g:wintabs_powerline_sep_buffer
   return { 'label': label, 'highlight': highlight }
 endfunction
 
@@ -101,26 +102,27 @@ function! wintabs_powerline#tab(tabnr, config)
 endfunction
 
 function! wintabs_powerline#tab_sep(config)
-  let label = g:wintabs_powerline_sep_tab
-  let highlight = g:wintabs_powerline_higroup_tab
-
   if a:config.is_rightmost
-    let label = ''
-    let highlight = ''
-  elseif a:config.is_active || a:config.is_leftmost
-    let label = g:wintabs_powerline_sep_tab_transition
-
-    if a:config.is_active && a:config.is_right
-      let highlight = 'WintabsPowerlineTabSepActiveTab'
-    elseif a:config.is_active && a:config.is_left && !a:config.is_leftmost
-      let highlight = 'WintabsPowerlineActiveTabSepTab'
-    elseif a:config.is_active && a:config.is_leftmost
-      let highlight = 'WintabsPowerlineActiveTabSepEmpty'
-    elseif !a:config.is_active && a:config.is_leftmost
-      let highlight = 'WintabsPowerlineTabSepEmpty'
-    endif
+    return { 'label': '', 'highlight': '' }
   endif
 
+  let highlight = g:wintabs_powerline_higroup_tab
+  if a:config.is_active && a:config.is_right
+    let highlight = 'WintabsPowerlineTabSepActiveTab'
+  elseif a:config.is_active && a:config.is_left && !a:config.is_leftmost
+    let highlight = 'WintabsPowerlineActiveTabSepTab'
+  elseif a:config.is_active && a:config.is_leftmost
+    let highlight = 'WintabsPowerlineActiveTabSepEmpty'
+  elseif !a:config.is_active && a:config.is_leftmost
+    let highlight = 'WintabsPowerlineTabSepEmpty'
+  endif
+
+  let is_transitional = has_key(s:sep_is_transitional, highlight)
+        \? s:sep_is_transitional[highlight]
+        \: 0
+  let label = is_transitional
+        \? g:wintabs_powerline_sep_tab_transition
+        \: g:wintabs_powerline_sep_tab
   return { 'label': label, 'highlight': highlight }
 endfunction
 
@@ -157,8 +159,14 @@ function! wintabs_powerline#padding(len)
 endfunction
 
 function! s:highlight(higroup, fg_higroup, bg_higroup)
-  let fg_color = s:get_bg(a:fg_higroup)
-  let bg_color = s:get_bg(a:bg_higroup)
+  let fg_color = s:get_color(a:fg_higroup, 'bg')
+  let bg_color = s:get_color(a:bg_higroup, 'bg')
+  let is_transitional = fg_color != bg_color
+  if !is_transitional
+    let fg_color = s:get_color(a:fg_higroup, 'fg')
+  endif
+  let s:sep_is_transitional[a:higroup] = is_transitional
+
   let cmd = 'highlight! '.a:higroup
   for mode in ['gui', 'cterm']
     let cmd = cmd.' '.mode.'fg='.fg_color[mode]
@@ -167,11 +175,11 @@ function! s:highlight(higroup, fg_higroup, bg_higroup)
   execute cmd
 endfunction
 
-function! s:get_bg(higroup)
+function! s:get_color(higroup, type)
   let color = {}
   for mode in ['gui', 'cterm']
-    let bg = synIDattr(synIDtrans(hlID(a:higroup)), 'bg', mode)
-    let color[mode] = empty(bg) ? 'bg' : bg
+    let value = synIDattr(synIDtrans(hlID(a:higroup)), a:type, mode)
+    let color[mode] = empty(value) ? a:type : value
   endfor
   return color
 endfunction
