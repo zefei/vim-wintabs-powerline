@@ -18,53 +18,15 @@ endfunction
 
 function! wintabs_powerline#on_colorscheme()
   let s:sep_is_transitional = {}
-  call s:highlight(
-        \'WintabsPowerlineBufferSepActiveBuffer',
-        \g:wintabs_powerline_higroup_buffer,
-        \g:wintabs_powerline_higroup_active_buffer,
-        \)
-  call s:highlight(
-        \'WintabsPowerlineActiveBufferSepBuffer',
-        \g:wintabs_powerline_higroup_active_buffer,
-        \g:wintabs_powerline_higroup_buffer,
-        \)
-  call s:highlight(
-        \'WintabsPowerlineActiveBufferSepEmpty',
-        \g:wintabs_powerline_higroup_active_buffer,
-        \g:wintabs_powerline_higroup_empty,
-        \)
-  call s:highlight(
-        \'WintabsPowerlineBufferSepEmpty',
-        \g:wintabs_powerline_higroup_buffer,
-        \g:wintabs_powerline_higroup_empty,
-        \)
-  call s:highlight(
-        \'WintabsPowerlineTabSepActiveTab',
-        \g:wintabs_powerline_higroup_tab,
-        \g:wintabs_powerline_higroup_active_tab,
-        \)
-  call s:highlight(
-        \'WintabsPowerlineActiveTabSepTab',
-        \g:wintabs_powerline_higroup_active_tab,
-        \g:wintabs_powerline_higroup_tab,
-        \)
-  call s:highlight(
-        \'WintabsPowerlineActiveTabSepEmpty',
-        \g:wintabs_powerline_higroup_active_tab,
-        \g:wintabs_powerline_higroup_empty,
-        \)
-  call s:highlight(
-        \'WintabsPowerlineTabSepEmpty',
-        \g:wintabs_powerline_higroup_tab,
-        \g:wintabs_powerline_higroup_empty,
-        \)
+  call s:highlight('WintabsInactiveSepActive', 'WintabsInactive', 'WintabsActive')
+  call s:highlight('WintabsActiveSepInactive', 'WintabsActive', 'WintabsInactive')
+  call s:highlight('WintabsActiveSepEmpty', 'WintabsActive', 'WintabsEmpty')
+  call s:highlight('WintabsInactiveSepEmpty', 'WintabsInactive', 'WintabsEmpty')
 endfunction
 
 function! wintabs_powerline#buffer(bufnr, config)
   let label = wintabs#renderers#buf_label(a:bufnr)
-  let highlight = a:config.is_active
-        \? g:wintabs_powerline_higroup_active_buffer
-        \: g:wintabs_powerline_higroup_buffer
+  let highlight = a:config.is_active ? 'WintabsActive' : 'WintabsInactive'
   return { 'label': label, 'highlight': highlight }
 endfunction
 
@@ -73,15 +35,15 @@ function! wintabs_powerline#buffer_sep(config)
     return { 'label': '', 'highlight': '' }
   endif
 
-  let highlight = g:wintabs_powerline_higroup_buffer
+  let highlight = 'WintabsInactive'
   if a:config.is_active && a:config.is_left
-    let highlight = 'WintabsPowerlineBufferSepActiveBuffer'
+    let highlight = 'WintabsInactiveSepActive'
   elseif a:config.is_active && a:config.is_right && !a:config.is_rightmost
-    let highlight = 'WintabsPowerlineActiveBufferSepBuffer'
+    let highlight = 'WintabsActiveSepInactive'
   elseif a:config.is_active && a:config.is_rightmost
-    let highlight = 'WintabsPowerlineActiveBufferSepEmpty'
+    let highlight = 'WintabsActiveSepEmpty'
   elseif !a:config.is_active && a:config.is_rightmost
-    let highlight = 'WintabsPowerlineBufferSepEmpty'
+    let highlight = 'WintabsInactiveSepEmpty'
   endif
 
   let is_transitional = has_key(s:sep_is_transitional, highlight)
@@ -95,9 +57,7 @@ endfunction
 
 function! wintabs_powerline#tab(tabnr, config)
   let label = ' '.wintabs#renderers#tab_label(a:tabnr).' '
-  let highlight = a:config.is_active
-        \? g:wintabs_powerline_higroup_active_tab
-        \: g:wintabs_powerline_higroup_tab
+  let highlight = a:config.is_active ? 'WintabsActive' : 'WintabsInactive'
   return { 'label': label, 'highlight': highlight }
 endfunction
 
@@ -106,15 +66,15 @@ function! wintabs_powerline#tab_sep(config)
     return { 'label': '', 'highlight': '' }
   endif
 
-  let highlight = g:wintabs_powerline_higroup_tab
+  let highlight = 'WintabsInactive'
   if a:config.is_active && a:config.is_right
-    let highlight = 'WintabsPowerlineTabSepActiveTab'
+    let highlight = 'WintabsInactiveSepActive'
   elseif a:config.is_active && a:config.is_left && !a:config.is_leftmost
-    let highlight = 'WintabsPowerlineActiveTabSepTab'
+    let highlight = 'WintabsActiveSepInactive'
   elseif a:config.is_active && a:config.is_leftmost
-    let highlight = 'WintabsPowerlineActiveTabSepEmpty'
+    let highlight = 'WintabsActiveSepEmpty'
   elseif !a:config.is_active && a:config.is_leftmost
-    let highlight = 'WintabsPowerlineTabSepEmpty'
+    let highlight = 'WintabsInactiveSepEmpty'
   endif
 
   let is_transitional = has_key(s:sep_is_transitional, highlight)
@@ -130,7 +90,7 @@ function! wintabs_powerline#left_arrow()
   return {
         \'type': 'left_arrow',
         \'label': g:wintabs_powerline_arrow_left,
-        \'highlight': g:wintabs_powerline_higroup_arrow,
+        \'highlight': 'WintabsArrow',
         \}
 endfunction
 
@@ -138,7 +98,7 @@ function! wintabs_powerline#right_arrow()
   return {
         \'type': 'right_arrow',
         \'label': g:wintabs_powerline_arrow_right,
-        \'highlight': g:wintabs_powerline_higroup_arrow,
+        \'highlight': 'WintabsArrow',
         \}
 endfunction
 
@@ -146,7 +106,7 @@ function! wintabs_powerline#line_sep()
   return {
         \'type': 'sep',
         \'label': '  ',
-        \'highlight': g:wintabs_powerline_higroup_empty,
+        \'highlight': 'WintabsEmpty',
         \}
 endfunction
 
@@ -154,7 +114,7 @@ function! wintabs_powerline#padding(len)
   return {
         \'type': 'sep',
         \'label': repeat(' ', a:len),
-        \'highlight': g:wintabs_powerline_higroup_empty,
+        \'highlight': 'WintabsEmpty',
         \}
 endfunction
 

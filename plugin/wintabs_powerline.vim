@@ -16,12 +16,11 @@ call s:set('g:wintabs_powerline_sep_buffer_transition', "\ue0b0")
 call s:set('g:wintabs_powerline_sep_buffer', "\ue0b1")
 call s:set('g:wintabs_powerline_sep_tab_transition', "\ue0b2")
 call s:set('g:wintabs_powerline_sep_tab', "\ue0b3")
-call s:set('g:wintabs_powerline_higroup_empty', 'TabLineFill')
-call s:set('g:wintabs_powerline_higroup_buffer', 'TabLine')
-call s:set('g:wintabs_powerline_higroup_active_buffer', 'TabLineSel')
-call s:set('g:wintabs_powerline_higroup_tab', 'TabLine')
-call s:set('g:wintabs_powerline_higroup_active_tab', 'TabLineSel')
-call s:set('g:wintabs_powerline_higroup_arrow', 'TabLine')
+
+highlight default link WintabsEmpty TabLineFill
+highlight default link WintabsActive TabLineSel
+highlight default link WintabsInactive TabLine
+highlight default link WintabsArrow TabLine
 
 " configure wintabs renderers
 call wintabs_powerline#init()

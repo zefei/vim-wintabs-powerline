@@ -42,27 +42,19 @@ Use your favorite package manager to install:
 
   Separator between inactive vimtabs.
 
-- `let g:wintabs_powerline_higroup_empty = 'TabLineFill'`
+- `highlight link WintabsEmpty TabLineFill`
 
-  Highlight group for tabline background.
+  Highlight group for background.
 
-- `let g:wintabs_powerline_higroup_buffer = 'TabLine'`
+- `highlight link WintabsActive TabLineSel`
 
-  Highlight group for inactive buffer.
+  Highlight group for active buffer/tab.
 
-- `let g:wintabs_powerline_higroup_active_buffer = 'TabLineSel'`
+- `highlight link WintabsInactive TabLine`
 
-  Highlight group for active buffer.
+  Highlight group for inactive buffer/tab.
 
-- `let g:wintabs_powerline_higroup_tab = 'TabLine'`
-
-  Highlight group for inactive vimtab.
-
-- `let g:wintabs_powerline_higroup_active_tab = 'TabLineSel'`
-
-  Highlight group for active vimtab.
-
-- `let g:wintabs_powerline_higroup_arrow = 'TabLine'`
+- `highlight link WintabsArrow TabLine`
 
   Highlight group for arrows.
 
