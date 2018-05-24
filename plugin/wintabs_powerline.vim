@@ -21,6 +21,8 @@ highlight default link WintabsEmpty TabLineFill
 highlight default link WintabsActive TabLineSel
 highlight default link WintabsInactive TabLine
 highlight default link WintabsArrow TabLine
+highlight default link WintabsActiveNC TabLine
+highlight default link WintabsInactiveNC TabLine
 
 " configure wintabs renderers
 call wintabs_powerline#init()

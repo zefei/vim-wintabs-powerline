@@ -12,21 +12,14 @@ function! wintabs_powerline#init()
 
   augroup wintabs_powerline_on_colorscheme
     autocmd!
-    autocmd ColorScheme,VimEnter * call wintabs_powerline#on_colorscheme()
+    autocmd ColorScheme,VimEnter * call s:on_colorscheme()
   augroup END
-endfunction
-
-function! wintabs_powerline#on_colorscheme()
-  let s:sep_is_transitional = {}
-  call s:highlight('WintabsInactiveSepActive', 'WintabsInactive', 'WintabsActive')
-  call s:highlight('WintabsActiveSepInactive', 'WintabsActive', 'WintabsInactive')
-  call s:highlight('WintabsActiveSepEmpty', 'WintabsActive', 'WintabsEmpty')
-  call s:highlight('WintabsInactiveSepEmpty', 'WintabsInactive', 'WintabsEmpty')
 endfunction
 
 function! wintabs_powerline#buffer(bufnr, config)
   let label = wintabs#renderers#buf_label(a:bufnr)
   let highlight = a:config.is_active ? 'WintabsActive' : 'WintabsInactive'
+  let highlight = s:maybe_nc(highlight, a:config)
   return { 'label': label, 'highlight': highlight }
 endfunction
 
@@ -46,6 +39,7 @@ function! wintabs_powerline#buffer_sep(config)
     let highlight = 'WintabsInactiveSepEmpty'
   endif
 
+  let highlight = s:maybe_nc(highlight, a:config)
   let is_transitional = has_key(s:sep_is_transitional, highlight)
         \? s:sep_is_transitional[highlight]
         \: 0
@@ -58,6 +52,7 @@ endfunction
 function! wintabs_powerline#tab(tabnr, config)
   let label = ' '.wintabs#renderers#tab_label(a:tabnr).' '
   let highlight = a:config.is_active ? 'WintabsActive' : 'WintabsInactive'
+  let highlight = s:maybe_nc(highlight, a:config)
   return { 'label': label, 'highlight': highlight }
 endfunction
 
@@ -77,6 +72,7 @@ function! wintabs_powerline#tab_sep(config)
     let highlight = 'WintabsInactiveSepEmpty'
   endif
 
+  let highlight = s:maybe_nc(highlight, a:config)
   let is_transitional = has_key(s:sep_is_transitional, highlight)
         \? s:sep_is_transitional[highlight]
         \: 0
@@ -118,6 +114,18 @@ function! wintabs_powerline#padding(len)
         \}
 endfunction
 
+function! s:on_colorscheme()
+  let s:sep_is_transitional = {}
+  call s:highlight('WintabsInactiveSepActive', 'WintabsInactive', 'WintabsActive')
+  call s:highlight('WintabsActiveSepInactive', 'WintabsActive', 'WintabsInactive')
+  call s:highlight('WintabsActiveSepEmpty', 'WintabsActive', 'WintabsEmpty')
+  call s:highlight('WintabsInactiveSepEmpty', 'WintabsInactive', 'WintabsEmpty')
+  call s:highlight('WintabsInactiveSepActiveNC', 'WintabsInactiveNC', 'WintabsActiveNC')
+  call s:highlight('WintabsActiveSepInactiveNC', 'WintabsActiveNC', 'WintabsInactiveNC')
+  call s:highlight('WintabsActiveSepEmptyNC', 'WintabsActiveNC', 'WintabsEmpty')
+  call s:highlight('WintabsInactiveSepEmptyNC', 'WintabsInactiveNC', 'WintabsEmpty')
+endfunction
+
 function! s:highlight(higroup, fg_higroup, bg_higroup)
   let fg_color = s:get_color(a:fg_higroup, 'bg')
   let bg_color = s:get_color(a:bg_higroup, 'bg')
@@ -139,7 +147,14 @@ function! s:get_color(higroup, type)
   let color = {}
   for mode in ['gui', 'cterm']
     let value = synIDattr(synIDtrans(hlID(a:higroup)), a:type, mode)
-    let color[mode] = empty(value) ? a:type : value
+    let color[mode] = empty(value) ? s:get_color('Normal', a:type)[mode] : value
   endfor
   return color
+endfunction
+
+function! s:maybe_nc(higroup, config)
+  let is_nc = has_key(a:config, 'is_active_window') && !a:config.is_active_window
+  let higroup = is_nc ? a:higroup.'NC' : a:higroup
+  " echom higroup
+  return higroup
 endfunction

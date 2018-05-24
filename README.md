@@ -58,6 +58,14 @@ Use your favorite package manager to install:
 
   Highlight group for arrows.
 
+- `highlight link WintabsActiveNC TabLine`
+
+  Highlight group for active buffer/tab in not-current windows.
+
+- `highlight link WintabsInactiveNC TabLine`
+
+  Highlight group for inactive buffer/tab in not-current windows.
+
 # License
 
 MIT License.
