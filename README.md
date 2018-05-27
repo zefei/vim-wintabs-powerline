@@ -9,12 +9,20 @@ Powerline fonts renderers for [wintabs](https://github.com/zefei/vim-wintabs).
 
 Use your favorite package manager to install:
 
-* [Pathogen](https://github.com/tpope/vim-pathogen)
-  * `git clone https://github.com/zefei/vim-wintabs-powerline ~/.vim/bundle/vim-wintabs-powerline`
-* [Vundle](https://github.com/gmarik/Vundle.vim)
-  * `Plugin 'zefei/vim-wintabs-powerline'`
-* [NeoBundle](https://github.com/Shougo/neobundle.vim)
-  * `NeoBundle 'zefei/vim-wintabs-powerline'`
+[pathogen](https://github.com/tpope/vim-pathogen)
+
+    git clone https://github.com/zefei/vim-wintabs ~/.vim/bundle/vim-wintabs
+    git clone https://github.com/zefei/vim-wintabs-powerline ~/.vim/bundle/vim-wintabs-powerline
+
+[vundle](https://github.com/vundlevim/vundle.vim)
+
+    plugin 'zefei/vim-wintabs'
+    plugin 'zefei/vim-wintabs-powerline'
+
+[vim-plug](https://github.com/junegunn/vim-plug)
+
+    plug 'zefei/vim-wintabs'
+    plug 'zefei/vim-wintabs-powerline'
 
 # Configuration
 
