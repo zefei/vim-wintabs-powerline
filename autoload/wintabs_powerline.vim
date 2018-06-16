@@ -14,6 +14,7 @@ function! wintabs_powerline#init()
     autocmd!
     autocmd ColorScheme,VimEnter * call s:on_colorscheme()
   augroup END
+  call s:on_colorscheme()
 endfunction
 
 function! wintabs_powerline#buffer(bufnr, config)
