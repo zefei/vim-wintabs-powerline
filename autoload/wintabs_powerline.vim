@@ -14,6 +14,7 @@ function! wintabs_powerline#init()
     autocmd!
     autocmd ColorScheme,VimEnter * call s:on_colorscheme()
   augroup END
+  call s:on_colorscheme()
 endfunction
 
 function! wintabs_powerline#buffer(bufnr, config)
@@ -147,7 +148,14 @@ function! s:get_color(higroup, type)
   let color = {}
   for mode in ['gui', 'cterm']
     let value = synIDattr(synIDtrans(hlID(a:higroup)), a:type, mode)
-    let color[mode] = empty(value) ? s:get_color('Normal', a:type)[mode] : value
+    if empty(value)
+      if a:higroup ==? 'Normal'
+        let value = a:type == 'fg' ? 'Black' : 'White'
+      else
+        let value = s:get_color('Normal', a:type)[mode]
+      endif
+    endif
+    let color[mode] = value
   endfor
   return color
 endfunction
