@@ -18,7 +18,7 @@ function! wintabs_powerline#init()
 endfunction
 
 function! wintabs_powerline#buffer(bufnr, config)
-  let label = wintabs#renderers#buf_label(a:bufnr)
+  let label = wintabs#renderers#buf_label(a:bufnr, a:config)
   let highlight = a:config.is_active ? 'WintabsActive' : 'WintabsInactive'
   let highlight = s:maybe_nc(highlight, a:config)
   return { 'label': label, 'highlight': highlight }
